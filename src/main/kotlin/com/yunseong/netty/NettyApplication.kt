@@ -40,7 +40,7 @@ internal class DiscardServerHandler : SimpleChannelInboundHandler<Any?>() {
 internal class EchoServerHandler : ChannelInboundHandlerAdapter() {
 
     override fun channelRead(ctx: ChannelHandlerContext?, msg: Any?) {
-        var readMessage: String = (msg as ByteBuf).toString(Charset.defaultCharset())
+        val readMessage: String = (msg as ByteBuf).toString(Charset.defaultCharset())
 
         println("수신한 문자열 [$readMessage]")
 

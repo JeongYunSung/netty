@@ -10,9 +10,9 @@ import java.lang.StringBuilder
 import java.nio.charset.Charset
 
 fun main(args: Array<String>) {
-    var group : EventLoopGroup = NioEventLoopGroup()
+    val group : EventLoopGroup = NioEventLoopGroup()
 
-    var b : Bootstrap = Bootstrap()
+    val b = Bootstrap()
     b.group(group)
         .channel(NioSocketChannel::class.java)
         .handler(object : ChannelInitializer<io.netty.channel.socket.SocketChannel>() {
@@ -36,12 +36,12 @@ internal class EchoClientHandler : ChannelInboundHandlerAdapter() {
     }
 
     override fun channelActive(ctx: ChannelHandlerContext?) {
-         var sendMessage = "Hello, Netty!"
+         val sendMessage = "Hello, Netty!"
 
-        var byteBuf : ByteBuf = Unpooled.buffer()
+        val byteBuf : ByteBuf = Unpooled.buffer()
         byteBuf.writeBytes(sendMessage.toByteArray())
 
-        var builder = StringBuilder()
+        val builder = StringBuilder()
 
         builder.append("전송한 문자열 [")
         builder.append(sendMessage)
@@ -53,9 +53,9 @@ internal class EchoClientHandler : ChannelInboundHandlerAdapter() {
     }
 
     override fun channelRead(ctx: ChannelHandlerContext?, msg: Any?) {
-        var readMessage: String = (msg as ByteBuf).toString(Charset.defaultCharset())
+        val readMessage: String = (msg as ByteBuf).toString(Charset.defaultCharset())
 
-        var builder = StringBuilder()
+        val builder = StringBuilder()
 
         builder.append("수신한 문자열 [")
         builder.append(readMessage)
