@@ -6,7 +6,6 @@ import io.netty.buffer.Unpooled
 import io.netty.channel.*
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.nio.NioSocketChannel
-import java.lang.StringBuilder
 import java.nio.charset.Charset
 
 fun main(args: Array<String>) {
