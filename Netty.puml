@@ -1,0 +1,9 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+BootStrap -> BossEventLoopGroup : 초기 셋업 진행
+BossEventLoopGroup --> NioEventLoop : 등록된 포트로 바인딩
+NioEventLoop --> NioEventLoop : 무한 Loop 돌면서 Accept 요청 Event 확인
+@enduml
