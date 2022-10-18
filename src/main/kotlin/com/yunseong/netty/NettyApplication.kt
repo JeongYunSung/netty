@@ -62,15 +62,15 @@ internal class EchoServerHandler : ChannelInboundHandlerAdapter() {
 
 internal class HttpServerInboundHandler : ChannelInboundHandlerAdapter() {
 
-    override fun channelRead(ctx: ChannelHandlerContext?, msg: Any?) {
+    override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
         if(msg is HttpRequest) {
             println("request: ${msg.uri()}")
             if (msg.uri().equals("/health")) {
-                val localAddress: InetSocketAddress = ctx?.channel()?.localAddress() as InetSocketAddress
+                val localAddress: InetSocketAddress = ctx.channel()?.localAddress() as InetSocketAddress
 
                 ctx.write(getResponse(HttpResponseStatus.OK, Unpooled.wrappedBuffer(localAddress.port.toString().toByteArray())))
             }else {
-                ctx?.write(getResponse(HttpResponseStatus.NOT_FOUND, Unpooled.wrappedBuffer("".toByteArray())))
+                ctx.write(getResponse(HttpResponseStatus.NOT_FOUND, Unpooled.wrappedBuffer("".toByteArray())))
             }
         }
     }

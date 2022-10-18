@@ -10,8 +10,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.netty:netty-all:4.1.24.Final'
-    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+    implementation 'io.netty:netty-all:4.1.82.Final'
 }
 
 test {
@@ -19,9 +18,5 @@ test {
 }
 
 compileKotlin {
-    kotlinOptions.jvmTarget = '1.8'
-}
-
-compileTestKotlin {
     kotlinOptions.jvmTarget = '1.8'
 }

@@ -22,7 +22,7 @@ fun main(args: Array<String>) {
             }
         })
 
-    var future : ChannelFuture = b.connect("localhost", 8888).sync()
+    val future : ChannelFuture = b.connect("localhost", 8888).sync()
 
     future.channel().closeFuture().sync()
 }
@@ -34,7 +34,7 @@ internal class EchoClientHandler : ChannelInboundHandlerAdapter() {
         ctx?.close()
     }
 
-    override fun channelActive(ctx: ChannelHandlerContext?) {
+    override fun channelActive(ctx: ChannelHandlerContext) {
          val sendMessage = "Hello, Netty!"
 
         val byteBuf : ByteBuf = Unpooled.buffer()
@@ -48,10 +48,10 @@ internal class EchoClientHandler : ChannelInboundHandlerAdapter() {
 
         println(builder)
 
-        ctx?.writeAndFlush(byteBuf)
+        ctx.writeAndFlush(byteBuf)
     }
 
-    override fun channelRead(ctx: ChannelHandlerContext?, msg: Any?) {
+    override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
         val readMessage: String = (msg as ByteBuf).toString(Charset.defaultCharset())
 
         val builder = StringBuilder()
