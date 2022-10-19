@@ -1,14 +1,19 @@
 on:
   push:
-    tags:
-    - v*
+    branches:
+      - master
 
 jobs:
   build_job:
-    name: gradle run build
+    if: ${{ startsWith(github.event.head_commit.message, 'deploy:') }}
     runs-on: ubuntu-latest
-    
     steps:
+    - name: AWS 인증 정보 확인
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+        aws-region: ap-northeast-2
     - name: 현재 브랜치로 checkout
       uses: actions/checkout@v3
     - name: JDK 17 설정
@@ -21,8 +26,8 @@ jobs:
       run: ./gradlew build --parallel
     - name: jar 파일 생성
       run: ./gradlew jar
-    - name: 파일명 변경
-      run: mv ./build/libs/*.jar deploy-${{ github.sha }}.jar
-    - name: 파일 압축
-      run: zip -r deploy-${{ github.sha }}.zip deploy-${{ github.sha }}.jar
-    - run: ls -al
+    - name: 도커파일 빌드
+      env:
+        HASH: ${{ github.sha }}
+      run: docker build -t ${{ env.HASH }} .
+    - run: docker images
