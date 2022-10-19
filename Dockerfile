@@ -1,14 +1,7 @@
 FROM --platform=linux/amd64 amazoncorretto:17-alpine3.16
 
-ARG DIR_PATH=app
+WORKDIR /app
 
-ENV PORT=8080
-ENV FILE_NAME=netty
+COPY /build/libs/*.jar netty.jar
 
-RUN mkdir $DIR_PATH
-
-WORKDIR $DIR_PATH
-
-COPY /build/libs/*.jar $FILE_NAME.jar
-
-ENTRYPOINT ["java", "-jar", "-Dport=$PORT", "$FILE_NAME.jar"]
+ENTRYPOINT ["java", "-jar", "-Dport=8080", "netty.jar"]
