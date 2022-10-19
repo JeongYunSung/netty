@@ -10,11 +10,12 @@ jobs:
     
     steps:
     - name: 현재 브랜치로 checkout
-    - uses: actions/checkout@v3
+      uses: actions/checkout@v3
     - name: JDK 17 설정
-    - uses: actions/setup-java@v3
+      uses: actions/setup-java@v3
       with:
         distribution: 'correctto'
         java-version: '17'
         cache: 'gradle'
-    - run: ./gradlew build --parallel
+    - name: gradle 빌드 시작
+      run: ./gradlew build --parallel
