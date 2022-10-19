@@ -1,7 +1,7 @@
 on:
   push:
     tags:
-    - v.*
+    - v*
 
 jobs:
   build_job:
@@ -19,5 +19,10 @@ jobs:
         cache: 'gradle'
     - name: gradle 빌드 시작
       run: ./gradlew build --parallel
-    - name: 디렉토리 구조
-      run: ls -al
+    - name: jar 파일 생성
+      run: ./gradlew jar
+    - name: 파일명 변경
+      run: mv ./build/libs/*.jar deploy-${{ github.sha }}.jar
+    - name: 파일 압축
+      run: zip -r deploy-${{ github.sha }}.zip deploy-${{ github.sha }}.jar
+    - run: ls -al
