@@ -1,3 +1,10 @@
+on:
+  push:
+    branches:
+    - master
+    tags:
+    - v*
+
 jobs:
   build_job:
     name: gradle run build
