@@ -8,7 +8,7 @@ import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.nio.NioSocketChannel
 import java.nio.charset.Charset
 
-fun main(args: Array<String>) {
+fun main() {
     val group : EventLoopGroup = NioEventLoopGroup()
 
     val b = Bootstrap()

@@ -13,7 +13,7 @@ import io.netty.handler.logging.LoggingHandler
 import java.net.InetSocketAddress
 import java.nio.charset.Charset
 
-fun main(args: Array<String>) {
+fun main() {
     val bossGroup: EventLoopGroup = NioEventLoopGroup()
     val workerGroup: EventLoopGroup = NioEventLoopGroup()
     val b = ServerBootstrap()
@@ -28,7 +28,7 @@ fun main(args: Array<String>) {
                 p.addLast(HttpServerInboundHandler())
             }
         })
-    val future = b.bind(System.getProperty("port").toInt()).sync()
+    val future = b.bind(System.getProperty("port", "8080").toInt()).sync()
     future.channel().closeFuture().sync()
 }
 
