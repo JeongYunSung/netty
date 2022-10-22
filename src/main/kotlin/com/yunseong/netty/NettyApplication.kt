@@ -2,7 +2,6 @@ package com.yunseong.netty
 
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.buffer.ByteBuf
-import io.netty.buffer.Unpooled
 import io.netty.channel.*
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.SocketChannel
@@ -65,12 +64,16 @@ internal class HttpServerInboundHandler : ChannelInboundHandlerAdapter() {
     override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
         if(msg is HttpRequest) {
             println("request: ${msg.uri()}")
+
+            val allocator = ctx.alloc()
+            val buf = allocator.buffer();
+
             if (msg.uri().equals("/health")) {
                 val localAddress: InetSocketAddress = ctx.channel()?.localAddress() as InetSocketAddress
 
-                ctx.write(getResponse(HttpResponseStatus.OK, Unpooled.wrappedBuffer(localAddress.port.toString().toByteArray())))
+                ctx.write(getResponse(HttpResponseStatus.OK, buf.writeBytes(localAddress.port.toString().toByteArray())))
             }else {
-                ctx.write(getResponse(HttpResponseStatus.NOT_FOUND, Unpooled.wrappedBuffer("".toByteArray())))
+                ctx.write(getResponse(HttpResponseStatus.NOT_FOUND, buf.writeBytes("".toByteArray())))
             }
         }
     }
