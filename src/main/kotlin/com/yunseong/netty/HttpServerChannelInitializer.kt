@@ -23,31 +23,14 @@ class HttpServerChannelInitializer : ChannelInitializer<SocketChannel>() {
 
     internal class HttpRequestInterceptInboundHandler : SimpleChannelInboundHandler<FullHttpMessage>() {
 
-        override fun channelRead0(ctx: ChannelHandlerContext, msg: FullHttpMessage?) {
-            if(msg is HttpRequest) {
-                val request = msg as HttpRequest
+        override fun channelRead0(ctx: ChannelHandlerContext, msg: FullHttpMessage) {
+            val trailer = msg as LastHttpContent
 
-                request.headers().forEach { (key, value) ->
-                }
-            }
+            println("============ Info Content ============")
 
-            if(msg is HttpContent) {
-                val httpContent = msg as HttpContent
-
-                val content = httpContent.content()
-
-                println("============== Content ==============")
-
-                println(content.readBytes(content.readableBytes()).toString(Charsets.UTF_8))
-            }
-
-            if(msg is LastHttpContent) {
-                val trailer = msg as LastHttpContent
-
-                println("============ Last Content ============")
-
-                println(trailer.toString())
-            }
+            println(trailer.toString())
+            println()
+            println(trailer.content().readBytes(trailer.content().readableBytes()).toString(Charsets.UTF_8))
 
             ctx.fireChannelRead(msg)
         }
