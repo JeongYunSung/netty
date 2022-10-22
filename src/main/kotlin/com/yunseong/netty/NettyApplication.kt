@@ -4,12 +4,10 @@ import io.netty.bootstrap.ServerBootstrap
 import io.netty.buffer.ByteBuf
 import io.netty.channel.*
 import io.netty.channel.nio.NioEventLoopGroup
-import io.netty.channel.socket.SocketChannel
 import io.netty.channel.socket.nio.NioServerSocketChannel
 import io.netty.handler.codec.http.*
 import io.netty.handler.logging.LogLevel
 import io.netty.handler.logging.LoggingHandler
-import java.net.InetSocketAddress
 import java.nio.charset.Charset
 
 fun main() {
@@ -19,14 +17,7 @@ fun main() {
     b.group(bossGroup, workerGroup)
         .channel(NioServerSocketChannel::class.java)
         .handler(LoggingHandler(LogLevel.INFO))
-        .childHandler(object : ChannelInitializer<SocketChannel>() {
-            @Throws(Exception::class)
-            override fun initChannel(ch: SocketChannel) {
-                val p = ch.pipeline()
-                p.addLast(HttpServerCodec())
-                p.addLast(HttpServerInboundHandler())
-            }
-        })
+        .childHandler(HttpServerChannelInitializer())
     val future = b.bind(System.getProperty("port", "8080").toInt()).sync()
     future.channel().closeFuture().sync()
 }
@@ -56,38 +47,5 @@ internal class EchoServerHandler : ChannelInboundHandlerAdapter() {
 
     override fun channelReadComplete(ctx: ChannelHandlerContext?) {
         ctx?.flush()
-    }
-}
-
-internal class HttpServerInboundHandler : ChannelInboundHandlerAdapter() {
-
-    override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
-        if(msg is HttpRequest) {
-            println("request: ${msg.uri()}")
-
-            val allocator = ctx.alloc()
-            val buf = allocator.buffer();
-
-            if (msg.uri().equals("/health")) {
-                val localAddress: InetSocketAddress = ctx.channel()?.localAddress() as InetSocketAddress
-
-                ctx.write(getResponse(HttpResponseStatus.OK, buf.writeBytes(localAddress.port.toString().toByteArray())))
-            }else {
-                ctx.write(getResponse(HttpResponseStatus.NOT_FOUND, buf.writeBytes("".toByteArray())))
-            }
-        }
-    }
-
-    override fun channelReadComplete(ctx: ChannelHandlerContext?) {
-        ctx?.flush()
-    }
-
-    private fun getResponse(status: HttpResponseStatus, content: ByteBuf): FullHttpResponse {
-        val response = DefaultFullHttpResponse(HttpVersion.HTTP_1_1, status, content)
-        response.headers().set(HttpHeaderNames.CONTENT_TYPE, HttpHeaderValues.APPLICATION_JSON)
-        response.headers().set(HttpHeaderNames.CONTENT_LENGTH, response.content().readableBytes())
-        response.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE)
-
-        return response
     }
 }
