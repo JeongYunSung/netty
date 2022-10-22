@@ -6,11 +6,32 @@ Netty : 서버/클라이언트 기반의 NIO 네트워크 프로토콜
 
 # Usage
 
+## Execute Jar
+
+```
 java -jar -Dport=80 ./build/libs/Netty-1.0-SNAPSHOT.jar
+```
 
 > port를 기재하지 않을 시 기본 포트인 8080을 사용합니다.
 
+## Run Docker
+
+```
+docker build -t netty-server .
+docker run -p 80:8080 netty-server
+```
+
 ## Request : http://localhost:8080/health
+
+# Example
+
+![image](./img.png)
+
+위와같이 Content Body정보 및 Header정보를 Console을 통해 확인할 수 있습니다.
+
+HttpMessage로 집계할 수 있는 Body의 사이즈는 1KB로 설정되어 있습니다. 
+
+> HttpObjectAggregator를 통해 AggregatedFullHttpRequest로 Convert된다. 기본은 HttpDefaultRequest
 
 # Study
 
